@@ -1,23 +1,37 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "type": "module",             
-  "main": "index.js",
+  "type": "module",
+  "main": "server.js",
   "scripts": {
-  "start": "node server.js",
-  "dev": "nodemon server.js"
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "body-parser": "^2.2.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "mongoose": "^8.17.2",
+    "node-fetch": "^3.3.2",
+    "nodemailer": "^6.10.1",
+    "openai": "^5.12.2",
+    "twilio": "^5.8.0"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.0",
+    "nodemon": "^3.1.10"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RakeshRakesh-jpg/mnrrealestate-backend.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "cors": "^2.8.5",
-    "dotenv": "^17.2.1",
-    "express": "^5.1.0",
-    "mongoose": "^8.16.4"
+  "bugs": {
+    "url": "https://github.com/RakeshRakesh-jpg/mnrrealestate-backend/issues"
   },
-  "devDependencies": {
-    "nodemon": "^3.1.10"
-  },
+  "homepage": "https://github.com/RakeshRakesh-jpg/mnrrealestate-backend#readme",
   "description": ""
 }
