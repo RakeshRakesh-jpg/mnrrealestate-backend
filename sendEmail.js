@@ -1,40 +1,26 @@
-import express from "express";
 import nodemailer from "nodemailer";
-import cors from "cors";
 import dotenv from "dotenv";
 
-dotenv.config(); // load .env
+dotenv.config();
 
-const app = express();
-
-app.use(cors());
-app.use(express.json());
-
-// ✅ Check if server is running
-app.get("/", (req, res) => {
-  res.send("Server is running!");
-});
-
-// ✅ Send email route
-app.post("/send-email", async (req, res) => {
-  const { name, email, phone, subject, propertyType, budget, message } = req.body;
-
+export async function sendEmail({ name, email, phone, subject, propertyType, budget, message }) {
   try {
-    // GoDaddy Workspace SMTP config
+    // GoDaddy SMTP config
     let transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST || "smtpout.secureserver.net",
-  port: process.env.SMTP_PORT || 465,   // 465 = SSL
-  secure: true, // SSL
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
-    // Send email
-    await transporter.sendMail({
-      from: `"${name}" <${process.env.EMAIL_USER}>`, // must be your domain email
-      replyTo: email, // user’s email goes in reply-to
-      to: process.env.EMAIL_USER, // receive in same inbox
+      host: process.env.SMTP_HOST || "smtpout.secureserver.net",
+      port: process.env.SMTP_PORT || 465,
+      secure: true, // SSL for 465
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+
+    // Mail options
+    let info = await transporter.sendMail({
+      from: `"${name}" <${process.env.EMAIL_USER}>`, // always use your domain email
+      replyTo: email, // reply goes to client
+      to: process.env.EMAIL_USER, // your inbox
       subject: `New Contact Form Submission: ${subject}`,
       html: `
         <h3>Contact Form Submission</h3>
@@ -48,17 +34,10 @@ app.post("/send-email", async (req, res) => {
       `,
     });
 
-    res.json({ success: true, message: "Email sent successfully!" });
+    console.log("✅ Email sent:", info.messageId);
+    return { success: true };
   } catch (error) {
-    console.error("Email sending error:", error);
-    res
-      .status(500)
-      .json({ success: false, message: "Failed to send email.", error: error.message });
+    console.error("❌ Email sending error:", error);
+    return { success: false, error: error.message };
   }
-});
-
-// ✅ Start server
-app.listen(process.env.PORT || 5000, () => {
-  console.log(`🚀 Server running on port ${process.env.PORT || 5000}`);
-});
-
+}
